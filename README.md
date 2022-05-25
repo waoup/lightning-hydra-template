@@ -45,7 +45,7 @@ It makes your code neatly organized and provides lots of useful features, like a
 - **Main Configs**: specify default training configuration | [#Main Project Configuration](#main-project-configuration)
 - **Experiment Configs**: override chosen hyperparameters | [#Experiment Configuration](#experiment-configuration)
 - **Workflow**: comes down to 4 simple steps | [#Workflow](#workflow)
-- **Experiment Tracking**: Tensorboard, W&B, Neptune, Comet, Mlflow and csv logging | [#Experiment Tracking](#experiment-tracking)
+- **Experiment Tracking**: Tensorboard, W&B, Neptune, Comet, MLFlow and CSVLogger | [#Experiment Tracking](#experiment-tracking)
 - **Logs**: all logs (checkpoints, configs, etc.) are stored in a dynamically generated folder structure | [#Logs](#logs)
 - **Hyperparameter Search**: made easier with Hydra plugins like [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) | [#Hyperparameter Search](#hyperparameter-search)
 - **Tests**: generic, easy-to-adapt tests for speeding up the development | [#Tests](#tests)
@@ -136,24 +136,20 @@ When running `python train.py` you should see something like this:
 <details>
 <summary><b>Override any config parameter from command line</b></summary>
 
-> Hydra allows you to easily overwrite any parameter defined in your config.
-
 ```bash
 python train.py trainer.max_epochs=20 model.lr=1e-4
 ```
 
-> You can also add new parameters with `+` sign.
+> **Note**: You can also add new parameters with `+` sign.
 
 ```bash
-python train.py +model.new_param="uwu"
+python train.py +model.new_param="owo"
 ```
 
 </details>
 
 <details>
 <summary><b>Train on CPU, GPU, multi-GPU and TPU</b></summary>
-
-> PyTorch Lightning makes it easy to train your models on different hardware.
 
 ```bash
 # train on CPU
@@ -196,9 +192,7 @@ python train.py +trainer.
  -->
 
 <details>
-<summary><b>Train model with any logger available in PyTorch Lightning, like Weights&Biases or Tensorboard</b></summary>
-
-> PyTorch Lightning provides convenient integrations with most popular logging frameworks, like Tensorboard, Neptune or simple csv files. Read more [here](#experiment-tracking). Using wandb requires you to [setup account](https://www.wandb.com/) first. After that just complete the config as below.<br> > **Click [here](https://wandb.ai/hobglob/template-dashboard/) to see example wandb dashboard generated with this template.**
+<summary><b>Train model with any logger available in PyTorch Lightning, like W&B or Tensorboard</b></summary>
 
 ```bash
 # set project and entity names in `configs/logger/wandb`
@@ -212,42 +206,44 @@ wandb:
 python train.py logger=wandb
 ```
 
+> **Note**: PyTorch Lightning provides convenient integrations with most popular logging frameworks. Learn more [here](#experiment-tracking).
+
+> **Note**: Using wandb requires you to [setup account](https://www.wandb.com/) first. After that just complete the config as below.<br> >
+
+> **Note**: **Click [here](https://wandb.ai/hobglob/template-dashboard/) to see example wandb dashboard generated with this template.**
+
 </details>
 
 <details>
 <summary><b>Train model with chosen experiment config</b></summary>
 
-> Experiment configurations are placed in [configs/experiment/](configs/experiment/).
-
 ```bash
 python train.py experiment=example
 ```
+
+> **Note**: Experiment configs are placed in [configs/experiment/](configs/experiment/).
 
 </details>
 
 <details>
 <summary><b>Attach some callbacks to run</b></summary>
 
-> Callbacks can be used for things such as as model checkpointing, early stopping and [many more](https://pytorch-lightning.readthedocs.io/en/latest/extensions/callbacks.html#built-in-callbacks).<br>
-> Callbacks configurations are placed in [configs/callbacks/](configs/callbacks/).
-
 ```bash
 python train.py callbacks=default
 ```
+
+> **Note**: Callbacks can be used for things such as as model checkpointing, early stopping and [many more](https://pytorch-lightning.readthedocs.io/en/latest/extensions/callbacks.html#built-in-callbacks).
+
+> **Note**: Callbacks configs are placed in [configs/callbacks/](configs/callbacks/).
 
 </details>
 
 <details>
 <summary><b>Use different tricks available in Pytorch Lightning</b></summary>
 
-> PyTorch Lightning provides about [40+ useful trainer flags](https://pytorch-lightning.readthedocs.io/en/latest/common/trainer.html#trainer-flags).
-
 ```yaml
 # gradient clipping may be enabled to avoid exploding gradients
 python train.py +trainer.gradient_clip_val=0.5
-
-# stochastic weight averaging can make your models generalize better
-python train.py +trainer.stochastic_weight_avg=true
 
 # run validation loop 4 times during a training epoch
 python train.py +trainer.val_check_interval=0.25
@@ -259,12 +255,12 @@ python train.py +trainer.accumulate_grad_batches=10
 python train.py +trainer.max_time="00:12:00:00"
 ```
 
+> **Note**: PyTorch Lightning provides about [40+ useful trainer flags](https://pytorch-lightning.readthedocs.io/en/latest/common/trainer.html#trainer-flags).
+
 </details>
 
 <details>
 <summary><b>Easily debug</b></summary>
-
-> Visit [configs/debug/](configs/debug/) for different debugging configs.
 
 ```bash
 # runs 1 epoch in default debugging mode
@@ -273,9 +269,6 @@ python train.py +trainer.max_time="00:12:00:00"
 # enables extra trainer flags like tracking gradient norm
 # enforces debug-friendly configuration
 python train.py debug=default
-
-# runs test epoch without training
-python train.py debug=test_only
 
 # run 1 train, val and test loop, using only 1 batch
 python train.py +trainer.fast_dev_run=true
@@ -297,29 +290,20 @@ python train.py +trainer.limit_train_batches=0.2 \
 python train.py +trainer.track_grad_norm=2
 ```
 
+> **Note**: Visit [configs/debug/](configs/debug/) for different debugging configs.
+
 </details>
 
 <details>
 <summary><b>Resume training from checkpoint</b></summary>
 
-> Checkpoint can be either path or URL.
-
 ```yaml
 python train.py trainer.resume_from_checkpoint="/path/to/ckpt/name.ckpt"
 ```
 
-> ⚠️ Currently loading ckpt in Lightning doesn't resume logger experiment, but it will be supported in future Lightning release.
+> **Note**: Checkpoint can be either path or URL.
 
-</details>
-
-<details>
-<summary><b>Execute evaluation for a given checkpoint</b></summary>
-
-> Checkpoint can be either path or URL.
-
-```yaml
-python test.py ckpt_path="/path/to/ckpt/name.ckpt"
-```
+> **Note**: Currently loading ckpt doesn't resume logger experiment, but it will be supported in future Lightning release.
 
 </details>
 
@@ -341,33 +325,31 @@ python train.py -m datamodule.batch_size=32,64,128 model.lr=0.001,0.0005
 <details>
 <summary><b>Create a sweep over hyperparameters with Optuna</b></summary>
 
-> Using [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) plugin doesn't require you to code any boilerplate into your pipeline, everything is defined in a [single config file](configs/hparams_search/mnist_optuna.yaml)!
-
 ```bash
 # this will run hyperparameter search defined in `configs/hparams_search/mnist_optuna.yaml`
 # over chosen experiment config
 python train.py -m hparams_search=mnist_optuna experiment=example_simple
 ```
 
-> ⚠️ Currently this sweep is not failure resistant (if one job crashes than the whole sweep crashes). Might be supported in future Hydra release.
+> **Note**: Using [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) plugin doesn't require you to code any boilerplate into your pipeline, everything is defined in a [single config file](configs/hparams_search/mnist_optuna.yaml).
 
 </details>
 
 <details>
 <summary><b>Execute all experiments from folder</b></summary>
 
-> Hydra provides special syntax for controlling behavior of multiruns. Learn more [here](https://hydra.cc/docs/next/tutorials/basic/running_your_app/multi-run). The command below executes all experiments from folder [configs/experiment/](configs/experiment/).
-
 ```bash
 python train.py -m 'experiment=glob(*)'
 ```
+
+> **Note**: Hydra provides special syntax for controlling behavior of multiruns. Learn more [here](https://hydra.cc/docs/next/tutorials/basic/running_your_app/multi-run). The command above executes all experiments from [configs/experiment/](configs/experiment/).
 
 </details>
 
 <details>
 <summary><b>Execute sweep on a remote AWS cluster</b></summary>
 
-> This should be achievable with simple config using [Ray AWS launcher for Hydra](https://hydra.cc/docs/next/plugins/ray_launcher). Example is not yet implemented in this template.
+> **Note**: This should be achievable with simple config using [Ray AWS launcher for Hydra](https://hydra.cc/docs/next/plugins/ray_launcher). Example is not implemented in this template.
 
 </details>
 
@@ -381,18 +363,18 @@ python train.py -m 'experiment=glob(*)'
 <details>
 <summary><b>Use Hydra tab completion</b></summary>
 
-> Hydra allows you to autocomplete config argument overrides in shell as you write them, by pressing `tab` key. Learn more [here](https://hydra.cc/docs/tutorials/basic/running_your_app/tab_completion).
+> **Note**: Hydra allows you to autocomplete config argument overrides in shell as you write them, by pressing `tab` key. Learn more [here](https://hydra.cc/docs/tutorials/basic/running_your_app/tab_completion).
 
 </details>
 
 <details>
 <summary><b>Apply pre-commit hooks</b></summary>
 
-> Apply pre-commit hooks to automatically format your code and configs, perform code analysis and remove output from jupyter notebooks. See [# Best Practices](#best-practices) for more.
-
 ```bash
 pre-commit run -a
 ```
+
+> **Note**: Apply pre-commit hooks to automatically format your code and configs, perform code analysis and remove output from jupyter notebooks. See [# Best Practices](#best-practices) for more.
 
 </details>
 
