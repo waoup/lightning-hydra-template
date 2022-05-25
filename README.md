@@ -19,20 +19,25 @@ _Suggestions are always welcome!_
 
 ## 📌&nbsp;&nbsp;Introduction
 
-> Effective usage requires learning of a couple of technologies: [PyTorch](https://pytorch.org), [PyTorch Lightning](https://www.pytorchlightning.ai) and [Hydra](https://hydra.cc). Knowledge of some experiment logging framework like [Weights&Biases](https://wandb.com), [Neptune](https://neptune.ai) or [MLFlow](https://mlflow.org) is also recommended.
+**Why you should use it:**
 
-**Why you should use it:** it allows you to rapidly iterate over new models/datasets and scale your projects from small single experiments to hyperparameter searches on computing clusters, without writing any boilerplate code. To my knowledge, it's one of the most convenient all-in-one technology stack for deep learning prototyping. Quick starting point for reproducing papers, hackathons, kaggle competitions or small-team research projects. It's also a collection of best practices for efficient workflow and reproducibility.
+- To my knowledge, it's one of the most convenient all-in-one technology stack for deep learning prototyping.
+- Allows you to rapidly iterate over new models and datasets.
+- It's a collection of best practices for efficient workflow and reproducibility.
+- Thoroughly commented - consider it a user-friendly educational resource on various MLOps tools.
 
-**Why you shouldn't use it:** this template is not fitted to be a production/deployment environment, should be used more as a fast experimentation tool. Apart from that, Lightning and Hydra are still evolving and integrate many libraries, which means sometimes things break - for the list of currently known bugs, visit [this page](https://github.com/ashleve/lightning-hydra-template/labels/bug). Also, even though Lightning is very flexible, it's not well suited for every possible deep learning task. See [#Limitations](#limitations) for more.
+**Why you shouldn't use it:**
 
-### Why PyTorch Lightning?
+- It wasn't built with experiment design im mind -
+- Doesn't go well with building multi-step processing systems and pipelines that depend on each other.
+- Not fitted to be a production/deployment environment.
+- Lightning and Hydra are still evolving and integrate many libraries, which means sometimes things break - for the list of currently known bugs, visit [this page](https://github.com/ashleve/lightning-hydra-template/labels/bug).
 
-[PyTorch Lightning](https://github.com/PyTorchLightning/pytorch-lightning) is a lightweight PyTorch wrapper for high-performance AI research.
-It makes your code neatly organized and provides lots of useful features, like ability to run model on CPU, GPU, multi-GPU cluster and TPU.
+### Main Technologies
 
-### Why Hydra?
+[PyTorch Lightning](https://github.com/PyTorchLightning/pytorch-lightning) - lightweight PyTorch wrapper for high-performance AI research. Think of it as a framework for organizing your PyTorch code.
 
-[Hydra](https://github.com/facebookresearch/hydra) is an open-source Python framework that simplifies the development of research and other complex applications. The key feature is the ability to dynamically create a hierarchical configuration by composition and override it through config files and the command line. It allows you to conveniently manage experiments and provides many useful plugins, like [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) for hyperparameter search, or [Ray Launcher](https://hydra.cc/docs/next/plugins/ray_launcher) for running jobs on a cluster.
+[Hydra](https://github.com/facebookresearch/hydra) - framework for elegantly configuring complex applications. The key feature is the ability to dynamically create a hierarchical configuration by composition and override it through config files and the command line. It allows you to conveniently manage experiments.
 
 <br>
 
@@ -41,7 +46,7 @@ It makes your code neatly organized and provides lots of useful features, like a
 - **Predefined Structure**: clean and scalable so that work can easily be extended [#Project Structure](#project-structure)
 - **Rapid Experimentation**: thanks to hydra command line superpowers | [#Your Superpowers](#your-superpowers)
 - **Little Boilerplate**: thanks to automating pipelines with config instantiation | [#How It Works](#how-it-works)
-- **Reproducibility**: allows to reproduce exactly the previous experiment | [#Reproducibility](#reproducibility)
+- **Reproducibility**: easily reproduce exactly the previous experiment | [#Reproducibility](#reproducibility)
 - **Main Configs**: specify default training configuration | [#Main Project Configuration](#main-project-configuration)
 - **Experiment Configs**: override chosen hyperparameters | [#Experiment Configuration](#experiment-configuration)
 - **Workflow**: comes down to 4 simple steps | [#Workflow](#workflow)
@@ -49,6 +54,7 @@ It makes your code neatly organized and provides lots of useful features, like a
 - **Logs**: all logs (checkpoints, configs, etc.) are stored in a dynamically generated folder structure | [#Logs](#logs)
 - **Hyperparameter Search**: made easier with Hydra plugins like [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) | [#Hyperparameter Search](#hyperparameter-search)
 - **Tests**: generic, easy-to-adapt tests for speeding up the development | [#Tests](#tests)
+- **Continuous Integration**: automatically test your repo with Github Actions | [#CI](#continuous-integration)
 - **Best Practices**: a couple of recommended tools, practices and standards | [#Best Practices](#best-practices)
 
 <br>
@@ -375,6 +381,15 @@ pre-commit run -a
 ```
 
 > **Note**: Apply pre-commit hooks to do things like auto-formatting code and configs, performing code analysis or removing output from jupyter notebooks. See [# Best Practices](#best-practices) for more.
+
+</details>
+
+<details>
+<summary><b>Run tests</b></summary>
+
+```bash
+pytest
+```
 
 </details>
 
@@ -802,17 +817,7 @@ python train.py trainer.gpus=4 +trainer.strategy=ddp
 
 ## Reproducibility
 
-What provides reproducibility:
-
-- Hydra manages your configs.
-- Hydra manages your logging paths and makes every executed run store its hyperparameters and config overrides in logs.
-- LightningDataModule allows you to encapsulate data split, transformations and default parameters in a single, clean abstraction.
-- LightningModule separates your research code from engineering code in a clean way.
-- Experiment tracking frameworks take care of logging metrics and hparams, some can also store results and artifacts in cloud.
-- Pytorch Lightning takes care of creating training checkpoints.
-- [Example callbacks for wandb](https://github.com/ashleve/lightning-hydra-template/tree/wandb-callbacks) show how you can save and upload a snapshot of codebase every time the run is executed
-
-<br>
+//TODO
 
 <br>
 
@@ -835,13 +840,12 @@ Similarly, you can simply pass a datamodule config as an init parameter:
 model = hydra.utils.instantiate(config.model, dm_conf=config.datamodule, _recursive_=False)
 ```
 
-Another approach is to access datamodule in LightningModule directlyTrainer:
+Another approach is to access datamodule in LightningModule directly through Trainer:
 
 ```python
 # ./src/models/mnist_module.py
-
-  def on_train_start(self):
-    self.some_param = self.trainer.datamodule.some_param
+def on_train_start(self):
+  self.some_param = self.trainer.datamodule.some_param
 ```
 
 > **Note**: This only works after the training starts since otherwise trainer won't be yet available in LightningModule.
@@ -1109,20 +1113,23 @@ Docker makes it easy to initialize the whole training environment, e.g. when you
 
 <br>
 
-## Useful Repositories
+## Resources
 
 This template was inspired by:
 
 - [PyTorchLightning/deep-learninig-project-template](https://github.com/PyTorchLightning/deep-learning-project-template)
 - [drivendata/cookiecutter-data-science](https://github.com/drivendata/cookiecutter-data-science)
 - [lucmos/nn-template](https://github.com/lucmos/nn-template)
-- [Erlemar/pytorch_tempest](https://github.com/Erlemar/pytorch_tempest)
 
-Other repositories:
+Useful repositories:
 
-- [pytorch/hydra-torch](https://github.com/pytorch/hydra-torch) - resources for configuring PyTorch classes with Hydra,
-- [romesco/hydra-lightning](https://github.com/romesco/hydra-lightning) - resources for configuring PyTorch Lightning classes with Hydra
+- [pytorch/hydra-torch](https://github.com/pytorch/hydra-torch) - safely configuring PyTorch classes with Hydra
+- [romesco/hydra-lightning](https://github.com/romesco/hydra-lightning) - safely configuring PyTorch Lightning classes with Hydra
 - [PyTorchLightning/lightning-transformers](https://github.com/PyTorchLightning/lightning-transformers) - official Lightning Transformers repo built with Hydra
+
+Other resources:
+
+- [A Quick Guide to Organizing Computational Biology Projects](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424)
 
 </details>
 
