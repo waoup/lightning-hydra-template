@@ -826,7 +826,7 @@ datamodule = hydra.utils.instantiate(config.datamodule)
 model = hydra.utils.instantiate(config.model, some_param=datamodule.some_param)
 ```
 
-> **Note:** Not a very robust solution, since it assumes all your datamodules have `some_param` attribute available.
+> **Note**: Not a very robust solution, since it assumes all your datamodules have `some_param` attribute available.
 
 Similarly, you can simply pass a datamodule config as an init parameter:
 
@@ -844,7 +844,7 @@ Another approach is to access datamodule in LightningModule directlyTrainer:
     self.some_param = self.trainer.datamodule.some_param
 ```
 
-> **Note:** This only works after the training starts since otherwise trainer won't be yet available in LightningModule.
+> **Note**: This only works after the training starts since otherwise trainer won't be yet available in LightningModule.
 
 <br>
 
