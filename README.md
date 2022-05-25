@@ -4,8 +4,8 @@
 
 <a href="https://www.python.org/"><img alt="Python" src="https://img.shields.io/badge/-Python 3.7+-blue?style=for-the-badge&logo=python&logoColor=white"></a>
 <a href="https://pytorch.org/get-started/locally/"><img alt="PyTorch" src="https://img.shields.io/badge/-PyTorch 1.8+-ee4c2c?style=for-the-badge&logo=pytorch&logoColor=white"></a>
-<a href="https://pytorchlightning.ai/"><img alt="Lightning" src="https://img.shields.io/badge/-Lightning 1.5+-792ee5?style=for-the-badge&logo=pytorchlightning&logoColor=white"></a>
-<a href="https://hydra.cc/"><img alt="Config: hydra" src="https://img.shields.io/badge/config-hydra 1.1-89b8cd?style=for-the-badge&labelColor=gray"></a>
+<a href="https://pytorchlightning.ai/"><img alt="Lightning" src="https://img.shields.io/badge/-Lightning 1.6+-792ee5?style=for-the-badge&logo=pytorchlightning&logoColor=white"></a>
+<a href="https://hydra.cc/"><img alt="Config: hydra" src="https://img.shields.io/badge/config-hydra 1.2-89b8cd?style=for-the-badge&labelColor=gray"></a>
 <a href="https://black.readthedocs.io/en/stable/"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-black.svg?style=for-the-badge&labelColor=gray"></a>
 
 A clean and scalable template to kickstart your deep learning project 🚀⚡🔥<br>
@@ -28,12 +28,12 @@ _Suggestions are always welcome!_
 
 **Why you shouldn't use it:**
 
-- Doesn't go well with building multi-step processing systems and pipelines that depend on each other.
-- It wasn't built with experimental design im mind -
+- The template configuration setup doesn't go well with building multi-step processing systems and pipelines that depend on each other.
+- It wasn't built with experimental design im mind - it's great if you want to simply benchmark a bunch of models, but if you want to
 - Not fitted to be a production/deployment environment.
 - Lightning and Hydra are still evolving and integrate many libraries, which means sometimes things break - for the list of currently known bugs, visit [this page](https://github.com/ashleve/lightning-hydra-template/labels/bug).
 
-### Main Technologies
+## Main Technologies
 
 [PyTorch Lightning](https://github.com/PyTorchLightning/pytorch-lightning) - lightweight PyTorch wrapper for high-performance AI research. Think of it as a framework for organizing your PyTorch code.
 
@@ -388,7 +388,14 @@ pre-commit run -a
 <summary><b>Run tests</b></summary>
 
 ```bash
+# run all tests
 pytest
+
+# run tests from specific file
+pytest tests/test_train.py
+
+# run all tests except the ones marked as slow
+pytest -k "not slow"
 ```
 
 </details>
@@ -611,25 +618,6 @@ Hydra creates new working directory for every executed run.
 </details>
 
 You can change this structure by modifying paths in [hydra configuration](configs/log_dir).
-
-<br>
-
-## Tests
-
-Template comes with example tests implemented with `pytest` library.
-
-```bash
-# run all tests
-pytest
-
-# run tests from specific file
-pytest tests/test_train.py
-
-# run all tests except the ones marked as slow
-pytest -k "not slow"
-```
-
-To speed up the development, you can once in a while execute tests that run a couple of quick experiments, like training 1 epoch on 25% of data, executing single train/val/test step, etc. You can easily modify the tests for your use case. If 1 epoch is too much for your model, then make it run for a couple of batches instead (by using the right trainer flags).
 
 <br>
 
