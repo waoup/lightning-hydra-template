@@ -15,7 +15,7 @@ _Suggestions are always welcome!_
 
 </div>
 
-<br><br>
+<br>
 
 ## 📌&nbsp;&nbsp;Introduction
 
@@ -31,6 +31,8 @@ _Suggestions are always welcome!_
 - The template configuration setup doesn't go well with building multi-step data processing systems and pipelines that depend on each other.
 - Not fitted to be a production/deployment environment.
 - Lightning and Hydra are still evolving and integrate many libraries, which means sometimes things break - for the list of currently known bugs, visit [this page](https://github.com/ashleve/lightning-hydra-template/labels/bug).
+
+<br>
 
 ## Main Technologies
 
