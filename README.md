@@ -44,19 +44,19 @@ _Suggestions are always welcome!_
 
 ## Main Ideas Of This Template
 
-- **Predefined Structure**: clean and scalable so that work can easily be extended [#Project Structure](#project-structure)
-- **Rapid Experimentation**: thanks to hydra command line superpowers | [#Your Superpowers](#your-superpowers)
-- **Little Boilerplate**: thanks to automating pipelines with config instantiation | [#How It Works](#how-it-works)
-- **Reproducibility**: easily reproduce exactly the previous experiment | [#Reproducibility](#reproducibility)
-- **Main Configs**: specify default training configuration | [#Main Project Configuration](#main-project-configuration)
-- **Experiment Configs**: override chosen hyperparameters | [#Experiment Configuration](#experiment-configuration)
-- **Workflow**: comes down to 4 simple steps | [#Workflow](#workflow)
-- **Experiment Tracking**: Tensorboard, W&B, Neptune, Comet, MLFlow and CSVLogger | [#Experiment Tracking](#experiment-tracking)
-- **Logs**: all logs (checkpoints, configs, etc.) are stored in a dynamically generated folder structure | [#Logs](#logs)
-- **Hyperparameter Search**: made easier with Hydra plugins like [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) | [#Hyperparameter Search](#hyperparameter-search)
-- **Tests**: generic, easy-to-adapt tests for speeding up the development | [#Tests](#tests)
-- **Continuous Integration**: automatically test your repo with Github Actions | [#CI](#continuous-integration)
-- **Best Practices**: a couple of recommended tools, practices and standards | [#Best Practices](#best-practices)
+- **Predefined Structure**: clean and scalable so that work can easily be extended [# Project Structure](#project-structure)
+- **Rapid Experimentation**: thanks to hydra command line superpowers | [# Your Superpowers](#your-superpowers)
+- **Little Boilerplate**: thanks to automating pipelines with config instantiation | [# How It Works](#how-it-works)
+- **Reproducibility**: easily reproduce exactly the previous experiment | [# Reproducibility](#reproducibility)
+- **Main Configs**: specify default training configuration | [# Main Project Configuration](#main-project-configuration)
+- **Experiment Configs**: override chosen hyperparameters | [# Experiment Configuration](#experiment-configuration)
+- **Workflow**: comes down to 4 simple steps | [# Workflow](#workflow)
+- **Experiment Tracking**: Tensorboard, W&B, Neptune, Comet, MLFlow and CSVLogger | [# Experiment Tracking](#experiment-tracking)
+- **Logs**: all logs (checkpoints, configs, etc.) are stored in a dynamically generated folder structure | [# Logs](#logs)
+- **Hyperparameter Search**: made easier with Hydra plugins like Optuna Sweeper | [# Hyperparameter Search](#hyperparameter-search)
+- **Tests**: generic, easy-to-adapt tests for speeding up the development | [# Tests](#tests)
+- **Continuous Integration**: automatically test your repo with Github Actions | [# Continuous Integration](#continuous-integration)
+- **Best Practices**: a couple of recommended tools, practices and standards | [# Best Practices](#best-practices)
 
 <br>
 
