@@ -39,15 +39,15 @@ It makes your code neatly organized and provides lots of useful features, like a
 ## Main Ideas Of This Template
 
 - **Predefined Structure**: clean and scalable so that work can easily be extended [#Project Structure](#project-structure)
-- **Little Boilerplate**: thanks to automating pipelines with config instantiation | [#How It Works](#how-it-works)
 - **Rapid Experimentation**: thanks to hydra command line superpowers | [#Your Superpowers](#your-superpowers)
-- **Reproducibility**: obtaining similar results is supported in multiple ways | [#Reproducibility](#reproducibility)
+- **Little Boilerplate**: thanks to automating pipelines with config instantiation | [#How It Works](#how-it-works)
+- **Reproducibility**: allows to reproduce exactly the previous experiment | [#Reproducibility](#reproducibility)
 - **Main Configs**: specify default training configuration | [#Main Project Configuration](#main-project-configuration)
 - **Experiment Configs**: override chosen hyperparameters | [#Experiment Configuration](#experiment-configuration)
 - **Workflow**: comes down to 4 simple steps | [#Workflow](#workflow)
-- **Experiment Tracking**: easy integration of Tensorboard, W&B, Neptune, Comet, Mlflow and csv logging | [#Experiment Tracking](#experiment-tracking)
+- **Experiment Tracking**: Tensorboard, W&B, Neptune, Comet, Mlflow and csv logging | [#Experiment Tracking](#experiment-tracking)
 - **Logs**: all logs (checkpoints, configs, etc.) are stored in a dynamically generated folder structure | [#Logs](#logs)
-- **Hyperparameter Search**: made easier with Hydra built-in plugins like [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) | [#Hyperparameter Search](#hyperparameter-search)
+- **Hyperparameter Search**: made easier with Hydra plugins like [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) | [#Hyperparameter Search](#hyperparameter-search)
 - **Tests**: generic, easy-to-adapt tests for speeding up the development | [#Tests](#tests)
 - **Best Practices**: a couple of recommended tools, practices and standards | [#Best Practices](#best-practices)
 
