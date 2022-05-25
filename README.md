@@ -194,7 +194,7 @@ python train.py +trainer.
 <details>
 <summary><b>Train model with any logger available in PyTorch Lightning, like W&B or Tensorboard</b></summary>
 
-```bash
+```yaml
 # set project and entity names in `configs/logger/wandb`
 wandb:
   project: "your_project_name"
@@ -328,10 +328,10 @@ python train.py -m datamodule.batch_size=32,64,128 model.lr=0.001,0.0005
 ```bash
 # this will run hyperparameter search defined in `configs/hparams_search/mnist_optuna.yaml`
 # over chosen experiment config
-python train.py -m hparams_search=mnist_optuna experiment=example_simple
+python train.py -m hparams_search=mnist_optuna experiment=example
 ```
 
-> **Note**: Using [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) plugin doesn't require you to code any boilerplate into your pipeline, everything is defined in a [single config file](configs/hparams_search/mnist_optuna.yaml).
+> **Note**: Using [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) doesn't require you to add any boilerplate into the pipeline, everything is defined in a [single config file](configs/hparams_search/mnist_optuna.yaml).
 
 </details>
 
@@ -374,7 +374,7 @@ python train.py -m 'experiment=glob(*)'
 pre-commit run -a
 ```
 
-> **Note**: Apply pre-commit hooks to automatically format your code and configs, perform code analysis and remove output from jupyter notebooks. See [# Best Practices](#best-practices) for more.
+> **Note**: Apply pre-commit hooks to do things like auto-formatting code and configs, performing code analysis or removing output from jupyter notebooks. See [# Best Practices](#best-practices) for more.
 
 </details>
 
@@ -388,7 +388,7 @@ Have a question? Found a bug? Missing a specific feature? Have an idea for impro
 
 ## How To Get Started
 
-- First, you should probably get familiar with [PyTorch Lightning](https://www.pytorchlightning.ai)
+- First, you should get familiar with [PyTorch Lightning](https://www.pytorchlightning.ai)
 - Next, go through [Hydra quick start guide](https://hydra.cc/docs/intro/) and [basic Hydra tutorial](https://hydra.cc/docs/tutorials/basic/your_first_app/simple_cli/)
 
 <br>
@@ -565,7 +565,10 @@ logger:
 
 ## Logs
 
-Hydra creates new working directory for every executed run. By default, logs have the following structure:
+Hydra creates new working directory for every executed run.
+
+<details>
+<summary><b>Show the default logs structure</b></summary>
 
 ```
 ├── logs
@@ -596,6 +599,8 @@ Hydra creates new working directory for every executed run. By default, logs hav
 │   └── debug                       # Logs generated during debugging
 │       └── ...
 ```
+
+</details>
 
 You can change this structure by modifying paths in [hydra configuration](configs/log_dir).
 
@@ -811,78 +816,35 @@ What provides reproducibility:
 
 <br>
 
-## Accessing datamodule attributes in model
+## Accessing Datamodule Attributes In Model
 
-1. The simplest way is to pass datamodule attribute directly to model on initialization:
+The simplest way is to pass datamodule attribute directly to model on initialization:
 
-   ```python
-   # ./src/training_pipeline.py
-   datamodule = hydra.utils.instantiate(config.datamodule)
-   model = hydra.utils.instantiate(config.model, some_param=datamodule.some_param)
-   ```
+```python
+# ./src/pipelines/train_pipeline.py
+datamodule = hydra.utils.instantiate(config.datamodule)
+model = hydra.utils.instantiate(config.model, some_param=datamodule.some_param)
+```
 
-   This is not a very robust solution, since it assumes all your datamodules have `some_param` attribute available (otherwise the run will crash).
+> **Note:** Not a very robust solution, since it assumes all your datamodules have `some_param` attribute available.
 
-2. If you only want to access datamodule config, you can simply pass it as an init parameter:
+Similarly, you can simply pass a datamodule config as an init parameter:
 
-   ```python
-   # ./src/training_pipeline.py
-   model = hydra.utils.instantiate(config.model, dm_conf=config.datamodule, _recursive_=False)
-   ```
+```python
+# ./src/pipelines/train_pipeline.py
+model = hydra.utils.instantiate(config.model, dm_conf=config.datamodule, _recursive_=False)
+```
 
-   Now you can access any datamodule config part like this:
+Another approach is to access datamodule in LightningModule directlyTrainer:
 
-   ```python
-   # ./src/models/my_model.py
-   class MyLitModel(LightningModule):
-   	def __init__(self, dm_conf, param1, param2):
-   		super().__init__()
+```python
+# ./src/models/mnist_module.py
 
-   		batch_size = dm_conf.batch_size
-   ```
+  def on_train_start(self):
+    self.some_param = self.trainer.datamodule.some_param
+```
 
-3. If you need to access the datamodule object attributes, a little hacky solution is to add Omegaconf resolver to your datamodule:
-
-   ```python
-   # ./src/datamodules/my_datamodule.py
-   from omegaconf import OmegaConf
-
-   class MyDataModule(LightningDataModule):
-   	def __init__(self, param1, param2):
-   		super().__init__()
-
-   		self.param1 = param1
-
-   		resolver_name = "datamodule"
-   		OmegaConf.register_new_resolver(
-   			resolver_name,
-   			lambda name: getattr(self, name),
-   			use_cache=False
-   		)
-   ```
-
-   This way you can reference any datamodule attribute from your config like this:
-
-   ```yaml
-   # this will return attribute 'param1' from datamodule object
-   param1: ${datamodule:param1}
-   ```
-
-   When later accessing this field, say in your lightning model, it will get automatically resolved based on all resolvers that are registered. Remember not to access this field before datamodule is initialized or it will crash.
-
-   **You also need to set `resolve=False` in `print_config(...)` in [utils](src/urils/__init__.py) to prevent config printing from accessing the parameter before datamodule is initialized:**
-
-   ```python
-   # ./src/urils/__init__.py
-    def extras(config: DictConfig) -> None:
-
-      ...
-
-      log.info("Printing config tree with Rich! <config.print_config=True>")
-      print_config(config, resolve=False)
-
-      ...
-   ```
+> **Note:** This only works after the training starts since otherwise trainer won't be yet available in LightningModule.
 
 <br>
 
