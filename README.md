@@ -23,13 +23,12 @@ _Suggestions are always welcome!_
 
 - To my knowledge, it's one of the most convenient all-in-one technology stack for deep learning prototyping.
 - Allows you to rapidly iterate over new models and datasets.
-- It's a collection of best practices for efficient workflow and reproducibility.
+- A collection of best practices for efficient workflow and reproducibility.
 - Thoroughly commented - consider it an educational resource on various MLOps tools.
 
 **Why you shouldn't use it:**
 
-- The template configuration setup doesn't go well with building multi-step processing systems and pipelines that depend on each other.
-- It wasn't built with experimental design im mind - it's great if you want to simply benchmark a bunch of models, but if you want to
+- The template configuration setup doesn't go well with building multi-step data processing systems and pipelines that depend on each other.
 - Not fitted to be a production/deployment environment.
 - Lightning and Hydra are still evolving and integrate many libraries, which means sometimes things break - for the list of currently known bugs, visit [this page](https://github.com/ashleve/lightning-hydra-template/labels/bug).
 
