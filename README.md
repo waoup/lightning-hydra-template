@@ -39,17 +39,17 @@ It makes your code neatly organized and provides lots of useful features, like a
 ## Main Ideas Of This Template
 
 - **Predefined Structure**: clean and scalable so that work can easily be extended and replicated | [#Project Structure](#project-structure)
-- **Rapid Experimentation**: thanks to automating pipeline with config files and hydra command line superpowers | [#Your Superpowers](#your-superpowers)
+- **Little Boilerplate**: thanks to automating pipelines with config instantiation | [#How It Works](#how-it-works)
+- **Rapid Experimentation**: thanks to hydra command line superpowers | [#Your Superpowers](#your-superpowers)
 - **Reproducibility**: obtaining similar results is supported in multiple ways | [#Reproducibility](#reproducibility)
-- **Little Boilerplate**: so pipeline can be easily modified | [#How It Works](#how-it-works)
-- **Main Configuration**: main config file specifies default training configuration | [#Main Project Configuration](#main-project-configuration)
-- **Experiment Configurations**: can be composed out of smaller configs and override chosen hyperparameters | [#Experiment Configuration](#experiment-configuration)
+- **Main Configs**: specify default training configuration | [#Main Project Configuration](#main-project-configuration)
+- **Experiment Configs**: override chosen hyperparameters | [#Experiment Configuration](#experiment-configuration)
 - **Workflow**: comes down to 4 simple steps | [#Workflow](#workflow)
-- **Experiment Tracking**: many logging frameworks can be easily integrated, like Tensorboard, MLFlow or W&B | [#Experiment Tracking](#experiment-tracking)
-- **Logs**: all logs (checkpoints, data from loggers, hparams, etc.) are stored in a convenient folder structure imposed by Hydra | [#Logs](#logs)
+- **Experiment Tracking**: many logging frameworks can be easily integrated, like Tensorboard, MLFlow, Neptune or W&B | [#Experiment Tracking](#experiment-tracking)
+- **Logs**: all logs (checkpoints, data from loggers, hparams, etc.) are stored in a dynamically generated folder structure | [#Logs](#logs)
 - **Hyperparameter Search**: made easier with Hydra built-in plugins like [Optuna Sweeper](https://hydra.cc/docs/next/plugins/optuna_sweeper) | [#Hyperparameter Search](#hyperparameter-search)
-- **Tests**: provides generic, easy-to-adapt tests for speeding up the development | [#Tests](#tests)
-- **Best Practices**: a couple of recommended tools, practices and standards for efficient workflow and reproducibility | [#Best Practices](#best-practices)
+- **Tests**: generic, easy-to-adapt tests for speeding up the development | [#Tests](#tests)
+- **Best Practices**: a couple of recommended tools, practices and standards | [#Best Practices](#best-practices)
 
 <br>
 
@@ -439,7 +439,7 @@ Switch between models and datamodules with command line arguments:
 python train.py model=mnist
 ```
 
-The whole pipeline managing the instantiation logic is placed in [src/training_pipeline.py](src/training_pipeline.py).
+Example pipeline managing the instantiation logic: [src/pipelines/train_pipeline.py](src/pipelines/train_pipeline.py).
 
 <br>
 
@@ -581,7 +581,7 @@ logger:
 
 ## Logs
 
-**Hydra creates new working directory for every executed run.** By default, logs have the following structure:
+Hydra creates new working directory for every executed run. By default, logs have the following structure:
 
 ```
 ├── logs
@@ -716,7 +716,7 @@ This approach doesn't support advanced technics like prunning - for more sophist
 
 ## Inference
 
-The following code is an example of loading model from checkpoint and running predictions.<br>
+Example of loading model from checkpoint and running predictions.<br>
 
 <details>
 <summary><b>Show example</b></summary>
@@ -794,26 +794,6 @@ pytest -k "not slow"
 ```
 
 To speed up the development, you can once in a while execute tests that run a couple of quick experiments, like training 1 epoch on 25% of data, executing single train/val/test step, etc. You can easily modify the tests for your use case. If 1 epoch is too much for your model, then make it run for a couple of batches instead (by using the right trainer flags).
-
-<br>
-
-## Callbacks
-
-The branch [`wandb-callbacks`](https://github.com/ashleve/lightning-hydra-template/tree/wandb-callbacks) contains example callbacks enabling better Weights&Biases integration, which you can use as a reference for writing your own callbacks (see [wandb_callbacks.py](https://github.com/ashleve/lightning-hydra-template/tree/wandb-callbacks/src/callbacks/wandb_callbacks.py)).
-
-Callbacks which support reproducibility:
-
-- **WatchModel**
-- **UploadCodeAsArtifact**
-- **UploadCheckpointsAsArtifact**
-
-Callbacks which provide examples of logging custom visualisations:
-
-- **LogConfusionMatrix**
-- **LogF1PrecRecHeatmap**
-- **LogImagePredictions**
-
-To see the result of all the callbacks attached, take a look at [this experiment dashboard](https://wandb.ai/hobglob/template-tests/runs/3rw7q70h).
 
 <br>
 
@@ -1185,24 +1165,16 @@ Docker makes it easy to initialize the whole training environment, e.g. when you
 
 ## Other Repositories
 
-<details>
-<summary><b>Inspirations</b></summary>
-
 This template was inspired by:
-[PyTorchLightning/deep-learninig-project-template](https://github.com/PyTorchLightning/deep-learning-project-template),
-[drivendata/cookiecutter-data-science](https://github.com/drivendata/cookiecutter-data-science),
-[lucmos/nn-template](https://github.com/lucmos/nn-template).
-[Erlemar/pytorch_tempest](https://github.com/Erlemar/pytorch_tempest),
-[tchaton/lightning-hydra-seed](https://github.com/tchaton/lightning-hydra-seed),
 
-</details>
+- [PyTorchLightning/deep-learninig-project-template](https://github.com/PyTorchLightning/deep-learning-project-template)
+- [drivendata/cookiecutter-data-science](https://github.com/drivendata/cookiecutter-data-science)
+- [lucmos/nn-template](https://github.com/lucmos/nn-template)
 
-<details>
-<summary><b>Useful repositories</b></summary>
+Other useful repositories:
 
 - [pytorch/hydra-torch](https://github.com/pytorch/hydra-torch) - resources for configuring PyTorch classes with Hydra,
 - [romesco/hydra-lightning](https://github.com/romesco/hydra-lightning) - resources for configuring PyTorch Lightning classes with Hydra
-- [lucmos/nn-template](https://github.com/lucmos/nn-template) - similar template
 - [PyTorchLightning/lightning-transformers](https://github.com/PyTorchLightning/lightning-transformers) - official Lightning Transformers repo built with Hydra
 
 </details>
