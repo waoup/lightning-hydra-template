@@ -206,11 +206,11 @@ wandb:
 python train.py logger=wandb
 ```
 
-> **Note**: PyTorch Lightning provides convenient integrations with most popular logging frameworks. Learn more [here](#experiment-tracking).
+> **Note**: Lightning provides convenient integrations with most popular logging frameworks. Learn more [here](#experiment-tracking).
 
-> **Note**: Using wandb requires you to [setup account](https://www.wandb.com/) first. After that just complete the config as below.<br> >
+> **Note**: Using wandb requires you to [setup account](https://www.wandb.com/) first. After that just complete the config as below.
 
-> **Note**: **Click [here](https://wandb.ai/hobglob/template-dashboard/) to see example wandb dashboard generated with this template.**
+> **Note**: Click [here](https://wandb.ai/hobglob/template-dashboard/) to see example wandb dashboard generated with this template.
 
 </details>
 
