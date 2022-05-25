@@ -24,12 +24,12 @@ _Suggestions are always welcome!_
 - To my knowledge, it's one of the most convenient all-in-one technology stack for deep learning prototyping.
 - Allows you to rapidly iterate over new models and datasets.
 - It's a collection of best practices for efficient workflow and reproducibility.
-- Thoroughly commented - consider it a user-friendly educational resource on various MLOps tools.
+- Thoroughly commented - consider it an educational resource on various MLOps tools.
 
 **Why you shouldn't use it:**
 
-- It wasn't built with experiment design im mind -
 - Doesn't go well with building multi-step processing systems and pipelines that depend on each other.
+- It wasn't built with experimental design im mind -
 - Not fitted to be a production/deployment environment.
 - Lightning and Hydra are still evolving and integrate many libraries, which means sometimes things break - for the list of currently known bugs, visit [this page](https://github.com/ashleve/lightning-hydra-template/labels/bug).
 
@@ -401,13 +401,6 @@ Have a question? Found a bug? Missing a specific feature? Have an idea for impro
 
 <br>
 
-## How To Get Started
-
-- First, you should get familiar with [PyTorch Lightning](https://www.pytorchlightning.ai)
-- Next, go through [Hydra quick start guide](https://hydra.cc/docs/intro/) and [basic Hydra tutorial](https://hydra.cc/docs/tutorials/basic/your_first_app/simple_cli/)
-
-<br>
-
 ## How It Works
 
 All PyTorch Lightning modules are dynamically instantiated from module paths specified in config. Example model config:
@@ -621,167 +614,6 @@ You can change this structure by modifying paths in [hydra configuration](config
 
 <br>
 
-## Experiment Tracking
-
-PyTorch Lightning supports many popular logging frameworks:<br>
-**[Weights&Biases](https://www.wandb.com/) · [Neptune](https://neptune.ai/) · [Comet](https://www.comet.ml/) · [MLFlow](https://mlflow.org) · [Tensorboard](https://www.tensorflow.org/tensorboard/)**
-
-These tools help you keep track of hyperparameters and output metrics and allow you to compare and visualize results. To use one of them simply complete its configuration in [configs/logger](configs/logger) and run:
-
-```bash
-python train.py logger=logger_name
-```
-
-You can use many of them at once (see [configs/logger/many_loggers.yaml](configs/logger/many_loggers.yaml) for example).
-
-You can also write your own logger.
-
-Lightning provides convenient method for logging custom metrics from inside LightningModule. Read the docs [here](https://pytorch-lightning.readthedocs.io/en/latest/extensions/logging.html#automatic-logging) or take a look at [MNIST example](src/models/mnist_module.py).
-
-<br>
-
-## Hyperparameter Search
-
-Defining hyperparameter optimization is as easy as adding new config file to [configs/hparams_search](configs/hparams_search).
-
-<details>
-<summary><b>Show example</b></summary>
-
-```yaml
-defaults:
-  - override /hydra/sweeper: optuna
-
-# choose metric which will be optimized by Optuna
-optimized_metric: "val/acc_best"
-
-hydra:
-  # here we define Optuna hyperparameter search
-  # it optimizes for value returned from function with @hydra.main decorator
-  # learn more here: https://hydra.cc/docs/next/plugins/optuna_sweeper
-  sweeper:
-    _target_: hydra_plugins.hydra_optuna_sweeper.optuna_sweeper.OptunaSweeper
-    storage: null
-    study_name: null
-    n_jobs: 1
-
-    # 'minimize' or 'maximize' the objective
-    direction: maximize
-
-    # number of experiments that will be executed
-    n_trials: 20
-
-    # choose Optuna hyperparameter sampler
-    # learn more here: https://optuna.readthedocs.io/en/stable/reference/samplers.html
-    sampler:
-      _target_: optuna.samplers.TPESampler
-      seed: 12345
-      consider_prior: true
-      prior_weight: 1.0
-      consider_magic_clip: true
-      consider_endpoints: false
-      n_startup_trials: 10
-      n_ei_candidates: 24
-      multivariate: false
-      warn_independent_sampling: true
-
-    # define range of hyperparameters
-    search_space:
-      datamodule.batch_size:
-        type: categorical
-        choices: [32, 64, 128]
-      model.lr:
-        type: float
-        low: 0.0001
-        high: 0.2
-      model.net.lin1_size:
-        type: categorical
-        choices: [32, 64, 128, 256, 512]
-      model.net.lin2_size:
-        type: categorical
-        choices: [32, 64, 128, 256, 512]
-      model.net.lin3_size:
-        type: categorical
-        choices: [32, 64, 128, 256, 512]
-```
-
-</details>
-
-Next, you can execute it with: `python train.py -m hparams_search=mnist_optuna`
-
-Using this approach doesn't require you to add any boilerplate into your pipeline, everything is defined in a single config file.
-
-You can use different optimization frameworks integrated with Hydra, like Optuna, Ax or Nevergrad.
-
-The `optimization_results.yaml` will be available under `logs/multirun` folder.
-
-This approach doesn't support advanced technics like prunning - for more sophisticated search, you should probably write a dedicated optimization pipeline without multirun feature.
-
-<br>
-
-## Inference
-
-Example of loading model from checkpoint and running predictions.<br>
-
-<details>
-<summary><b>Show example</b></summary>
-
-```python
-from PIL import Image
-from torchvision import transforms
-
-from src.models.mnist_module import MNISTLitModule
-
-
-def predict():
-    """Example of inference with trained model.
-    It loads trained image classification model from checkpoint.
-    Then it loads example image and predicts its label.
-    """
-
-    # ckpt can be also a URL!
-    CKPT_PATH = "last.ckpt"
-
-    # load model from checkpoint
-    # model __init__ parameters will be loaded from ckpt automatically
-    # you can also pass some parameter explicitly to override it
-    trained_model = MNISTLitModule.load_from_checkpoint(checkpoint_path=CKPT_PATH)
-
-    # print model hyperparameters
-    print(trained_model.hparams)
-
-    # switch to evaluation mode
-    trained_model.eval()
-    trained_model.freeze()
-
-    # load data
-    img = Image.open("data/example_img.png").convert("L")  # convert to black and white
-    # img = Image.open("data/example_img.png").convert("RGB")  # convert to RGB
-
-    # preprocess
-    mnist_transforms = transforms.Compose(
-        [
-            transforms.ToTensor(),
-            transforms.Resize((28, 28)),
-            transforms.Normalize((0.1307,), (0.3081,)),
-        ]
-    )
-    img = mnist_transforms(img)
-    img = img.reshape((1, *img.size()))  # reshape to form batch of size 1
-
-    # inference
-    output = trained_model(img)
-    print(output)
-
-
-if __name__ == "__main__":
-    predict()
-
-```
-
-</details>
-
-<br>
-
 ## Tests
 
 Template comes with example tests implemented with `pytest` library.
@@ -798,57 +630,6 @@ pytest -k "not slow"
 ```
 
 To speed up the development, you can once in a while execute tests that run a couple of quick experiments, like training 1 epoch on 25% of data, executing single train/val/test step, etc. You can easily modify the tests for your use case. If 1 epoch is too much for your model, then make it run for a couple of batches instead (by using the right trainer flags).
-
-<br>
-
-## Multi-GPU Training
-
-Lightning supports multiple ways of doing distributed training. The most common one is DDP, which spawns separate process for each GPU and averages gradients between them. To learn about other approaches read the [lightning docs](https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html).
-
-You can run DDP on mnist example with 4 GPUs like this:
-
-```bash
-python train.py trainer.gpus=4 +trainer.strategy=ddp
-```
-
-⚠️ When using DDP you have to be careful how you write your models - learn more [here](https://pytorch-lightning.readthedocs.io/en/latest/advanced/multi_gpu.html).
-
-<br>
-
-## Reproducibility
-
-//TODO
-
-<br>
-
-## Accessing Datamodule Attributes In Model
-
-The simplest way is to pass datamodule attribute directly to model on initialization:
-
-```python
-# ./src/pipelines/train_pipeline.py
-datamodule = hydra.utils.instantiate(config.datamodule)
-model = hydra.utils.instantiate(config.model, some_param=datamodule.some_param)
-```
-
-> **Note**: Not a very robust solution, since it assumes all your datamodules have `some_param` attribute available.
-
-Similarly, you can simply pass a datamodule config as an init parameter:
-
-```python
-# ./src/pipelines/train_pipeline.py
-model = hydra.utils.instantiate(config.model, dm_conf=config.datamodule, _recursive_=False)
-```
-
-Another approach is to access datamodule in LightningModule directly through Trainer:
-
-```python
-# ./src/models/mnist_module.py
-def on_train_start(self):
-  self.some_param = self.trainer.datamodule.some_param
-```
-
-> **Note**: This only works after the training starts since otherwise trainer won't be yet available in LightningModule.
 
 <br>
 
