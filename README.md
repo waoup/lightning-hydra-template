@@ -38,7 +38,7 @@ It makes your code neatly organized and provides lots of useful features, like a
 
 ## Main Ideas Of This Template
 
-- **Predefined Structure**: clean and scalable so that work can easily be extended and replicated | [#Project Structure](#project-structure)
+- **Predefined Structure**: clean and scalable so that work can easily be extended and replicated \\ [#Project Structure](#project-structure)
 - **Little Boilerplate**: thanks to automating pipelines with config instantiation | [#How It Works](#how-it-works)
 - **Rapid Experimentation**: thanks to hydra command line superpowers | [#Your Superpowers](#your-superpowers)
 - **Reproducibility**: obtaining similar results is supported in multiple ways | [#Reproducibility](#reproducibility)
@@ -131,7 +131,7 @@ When running `python train.py` you should see something like this:
 
 </div>
 
-### ⚡&nbsp;&nbsp;Your Superpowers
+## ⚡&nbsp;&nbsp;Your Superpowers
 
 <details>
 <summary><b>Override any config parameter from command line</b></summary>
@@ -332,7 +332,9 @@ python test.py ckpt_path="/path/to/ckpt/name.ckpt"
 python train.py -m datamodule.batch_size=32,64,128 model.lr=0.001,0.0005
 ```
 
-> ⚠️ This sweep is not failure resistant (if one job crashes than the whole sweep crashes).
+> **Note**: Sweeps are not failure resistant (if one job crashes than the whole sweep crashes).
+
+> **Note**: Hydra composes configs lazily at job launching time. If you change code or configs after launching a job/sweep, the final composed configs might be impacted.
 
 </details>
 
@@ -1123,11 +1125,11 @@ setup(
     description="Describe Your Cool Project",
     author="...",
     author_email="...",
-    url="https://github.com/ashleve/lightning-hydra-template",  # replace with your own github project link
+    url="https://github.com/ashleve/lightning-hydra-template",  # replace with your own
     install_requires=[
         "pytorch>=1.10.0",
-        "pytorch-lightning>=1.4.0",
-        "hydra-core>=1.1.0",
+        "pytorch-lightning>=1.6.0",
+        "hydra-core>=1.2.0",
     ],
     packages=find_packages(),
 )
@@ -1163,15 +1165,16 @@ Docker makes it easy to initialize the whole training environment, e.g. when you
 
 <br>
 
-## Other Repositories
+## Useful Repositories
 
 This template was inspired by:
 
 - [PyTorchLightning/deep-learninig-project-template](https://github.com/PyTorchLightning/deep-learning-project-template)
 - [drivendata/cookiecutter-data-science](https://github.com/drivendata/cookiecutter-data-science)
 - [lucmos/nn-template](https://github.com/lucmos/nn-template)
+- [Erlemar/pytorch_tempest](https://github.com/Erlemar/pytorch_tempest)
 
-Other useful repositories:
+Other repositories:
 
 - [pytorch/hydra-torch](https://github.com/pytorch/hydra-torch) - resources for configuring PyTorch classes with Hydra,
 - [romesco/hydra-lightning](https://github.com/romesco/hydra-lightning) - resources for configuring PyTorch Lightning classes with Hydra
@@ -1259,20 +1262,20 @@ Train model with default configuration
 
 ```bash
 # train on CPU
-python src/train.py trainer.gpus=0
+python train.py trainer.gpus=0
 
 # train on GPU
-python src/train.py trainer.gpus=1
+python train.py trainer.gpus=1
 ```
 
 Train model with chosen experiment configuration from [configs/experiment/](configs/experiment/)
 
 ```bash
-python src/train.py experiment=experiment_name.yaml
+python train.py experiment=experiment_name.yaml
 ```
 
 You can override any parameter from command line like this
 
 ```bash
-python src/train.py trainer.max_epochs=20 datamodule.batch_size=64
+python train.py trainer.max_epochs=20 datamodule.batch_size=64
 ```
