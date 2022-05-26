@@ -590,13 +590,13 @@ _Say you want to execute 20 different runs and plot how accuracy changes in resp
 
    ```bash
    # execute run with specific name
-   python train.py datamodule.batch_size=16 name="batch_size_exp"
+   python train.py logger=csv datamodule.batch_size=16 name="batch_size_exp"
 
    # execute many runs with specific name
-   python train.py -m datamodule.batch_size=16,32,64,128 name="batch_size_exp"
+   python train.py -m logger=csv datamodule.batch_size=16,32,64,128 name="batch_size_exp"
 
    # execute many runs with specific tags
-   python train.py -m datamodule.batch_size=16,32,64,128 tags=["batch_size_exp", "mnist"]
+   python train.py -m logger=csv datamodule.batch_size=16,32,64,128 tags=["batch_size_exp"]
    ```
 
 2. Write a script/notebook that searches over the `logs/` folder and retrieves the metrics of runs containing given name or tags. Plot the results.
