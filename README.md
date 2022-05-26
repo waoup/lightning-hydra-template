@@ -586,7 +586,7 @@ logger:
 
 _Say you want to execute 20 different runs and plot how accuracy changes in respect to batch size._
 
-1. Execute the runs with some config parameter that allows you to identify them easily. This could be things like experiment name or tags, for example:
+1. Execute the runs with some config parameter that allows you to identify them easily, like experiment name or tags:
 
    ```bash
    # execute run with specific name
@@ -605,7 +605,7 @@ _Say you want to execute 20 different runs and plot how accuracy changes in resp
 
 ## Logs
 
-Hydra creates new working directory for every executed run.
+Hydra creates new output directory for every executed run.
 
 <details>
 <summary><b>Show the default logs structure</b></summary>
@@ -647,11 +647,6 @@ You can change this structure by modifying paths in [hydra configuration](config
 <br>
 
 ## Best Practices
-
-<details>
-<summary><b>Experiment design</b></summary>
-
-</details>
 
 <details>
 <summary><b>Use Miniconda for GPU environments</b></summary>
@@ -929,6 +924,8 @@ Useful repositories:
 Other resources:
 
 - [A Quick Guide to Organizing Computational Biology Projects](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424)
+- [Cookiecutter Data Science Project Structure Opinions](http://drivendata.github.io/cookiecutter-data-science/#opinions)
+- [The Machine Learning Reproducibility Checklist](https://www.cs.mcgill.ca/~jpineau/ReproducibilityChecklist.pdf)
 
 </details>
 
