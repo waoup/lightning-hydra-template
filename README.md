@@ -572,10 +572,34 @@ logger:
 
 ## Workflow
 
-1. Write PyTorch Lightning module (see [models/mnist_module.py](src/models/mnist_module.py) for example)
-2. Write PyTorch Lightning datamodule (see [datamodules/mnist_datamodule.py](src/datamodules/mnist_datamodule.py) for example)
-3. Write experiment config, containing paths to your model and datamodule
-4. Run training with chosen experiment config: `python src/train.py experiment=experiment_name`
+**Basic workflow:**
+
+1. Write your PyTorch Lightning module (see [models/mnist_module.py](src/models/mnist_module.py) for example)
+2. Write your PyTorch Lightning datamodule (see [datamodules/mnist_datamodule.py](src/datamodules/mnist_datamodule.py) for example)
+3. Write your experiment config, containing paths to model and datamodule
+4. Run training with chosen experiment config:
+   ```bash
+   python src/train.py experiment=experiment_name.yaml
+   ```
+
+**Experiment design:**
+
+_Say you want to execute 20 different runs and plot how accuracy changes in respect to batch size._
+
+1. Execute the runs with some config parameter that allows you to identify them easily. This could be things like experiment name or tags, for example:
+
+   ```bash
+   # execute run with specific name
+   python train.py datamodule.batch_size=16 name="batch_size_exp"
+
+   # execute many runs with specific name
+   python train.py -m datamodule.batch_size=16,32,64,128 name="batch_size_exp"
+
+   # execute many runs with specific tags
+   python train.py -m datamodule.batch_size=16,32,64,128 tags=["batch_size_exp", "mnist"]
+   ```
+
+2. Write a script/notebook that searches over the `logs/` folder and retrieves the metrics of runs containing given name or tags. Plot the results.
 
 <br>
 
@@ -623,6 +647,11 @@ You can change this structure by modifying paths in [hydra configuration](config
 <br>
 
 ## Best Practices
+
+<details>
+<summary><b>Experiment design</b></summary>
+
+</details>
 
 <details>
 <summary><b>Use Miniconda for GPU environments</b></summary>
