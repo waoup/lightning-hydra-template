@@ -38,7 +38,7 @@ _Suggestions are always welcome!_
 
 [PyTorch Lightning](https://github.com/PyTorchLightning/pytorch-lightning) - lightweight PyTorch wrapper for high-performance AI research. Think of it as a framework for organizing your PyTorch code.
 
-[Hydra](https://github.com/facebookresearch/hydra) - framework for elegantly configuring complex applications. The key feature is the ability to dynamically create a hierarchical configuration by composition and override it through config files and the command line. It allows you to conveniently manage experiments.
+[Hydra](https://github.com/facebookresearch/hydra) - framework for elegantly configuring complex applications. The key feature is the ability to dynamically create a hierarchical configuration by composition and override it through config files and the command line.
 
 <br>
 
