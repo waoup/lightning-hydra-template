@@ -599,7 +599,7 @@ _Say you want to execute 20 different runs and plot how accuracy changes in resp
    python train.py -m logger=csv datamodule.batch_size=16,32,64,128 tags=["batch_size_exp"]
    ```
 
-2. Write a script/notebook that searches over the `logs/` folder and retrieves the metrics of runs containing given name or tags. Plot the results.
+2. Write a script/notebook that searches over the `logs/` folder and retrieves the metrics of runs containing given name or tags in config. Plot the results.
 
 <br>
 
